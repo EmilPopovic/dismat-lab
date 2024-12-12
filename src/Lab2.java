@@ -129,6 +129,4 @@ public class Lab2 {
 
         return result;
     }
-
-
 }
