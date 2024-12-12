@@ -32,6 +32,9 @@ public class Lab2 {
         } catch (FileNotFoundException e) {
             System.out.println("Nepravilna datoteka: " + filePath);
             System.exit(1);
+        } catch (Exception _) {
+            System.out.println("Nepravilan format datoteke: " + filePath);
+            System.exit(1);
         }
 
         int cycleCount = countCyclesOfLength(matrix, k);
@@ -46,15 +49,15 @@ public class Lab2 {
     }
 
     private static int trace(int[][] matrix) {
-        if (matrix.length != matrix[0].length) {
-            throw new IllegalArgumentException("Matrica nije kvadratna.");
+        if (matrix.length != matrix[0].length) { throw new IllegalArgumentException("Matrica nije kvadratna."); }
+
+        int trace = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            trace += matrix[i][i];
         }
 
-        int tr = 0;
-        for (int i = 0; i < matrix.length; i++) {
-            tr += matrix[i][i];
-        }
-        return tr;
+        return trace;
     }
 
     private static FileData processFile(String filePath) throws FileNotFoundException {
@@ -77,20 +80,13 @@ public class Lab2 {
     }
 
     private static int[][] mul(int[][] a, int[][] b) {
-        int rowsA = a.length;
-        int rowsB = b.length;
-        int colsA = a[0].length;
-        int colsB = b[0].length;
+        if (a[0].length != b.length) { throw new IllegalArgumentException("Matrice nisu ulančane."); }
 
-        if (colsA != rowsB) {
-            throw new IllegalArgumentException("Matrice nisu ulančane.");
-        }
+        int[][] result = new int[a.length][b[0].length];
 
-        int[][] result = new int[rowsA][colsB];
-
-        for (int i = 0; i < rowsA; i++) {
-            for (int j = 0; j < colsB; j++) {
-                for (int k = 0; k < colsA; k++) {
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                for (int k = 0; k < a[0].length; k++) {
                     result[i][j] += a[i][k] * b[k][j];
                 }
             }
@@ -108,13 +104,9 @@ public class Lab2 {
     }
 
     private static int[][] pow(int[][] mat, int power) {
-        if (power < 0) {
-            throw new IllegalArgumentException("Negativan eksponent.");
-        }
+        if (power < 0) { throw new IllegalArgumentException("Negativan eksponent."); }
 
-        if (mat.length != mat[0].length) {
-            throw new IllegalArgumentException("Matrica nije kvadratna.");
-        }
+        if (mat.length != mat[0].length) { throw new IllegalArgumentException("Matrica nije kvadratna."); }
 
         int[][] result = unitMatrix(mat.length);
         int[][] base = mat;
