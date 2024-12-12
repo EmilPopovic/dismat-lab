@@ -18,9 +18,9 @@ public class Lab2 {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        System.out.println("Unesite ime datoteke: ");
+        System.out.print("Unesite ime datoteke: ");
 
-        String filePath = in.nextLine();
+        String filePath = "src/" + in.nextLine();
 
         int[][] matrix = null;
         int k = 0;
