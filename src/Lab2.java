@@ -37,27 +37,50 @@ public class Lab2 {
             System.exit(1);
         }
 
-        int cycleCount = countCyclesOfLength(matrix, k);
-
-        System.out.println("Rjesenje: " + (cycleCount > 0 ? 1 : 0));
+        System.out.println("Rjesenje: " + hasKCycle(matrix, k));
 
         in.close();
     }
 
-    private static int countCyclesOfLength(int[][] adjMatrix, int cycleLength) {
-        return trace(pow(adjMatrix, cycleLength));
+
+    public static boolean hasKCycle(int[][] graph, int k) {
+        boolean[] visited = new boolean[graph.length];
+
+        // za svaki vrh provjeri je li dio ciklusa trazene duljine
+        for (int i = 0; i < graph.length; i++) {
+            if (dfs(graph, visited, i, i, 0, k)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private static int trace(int[][] matrix) {
-        if (matrix.length != matrix[0].length) { throw new IllegalArgumentException("Matrica nije kvadratna."); }
-
-        int trace = 0;
-
-        for (int i = 0; i < matrix.length; i++) {
-            trace += matrix[i][i];
+    private static boolean dfs(int[][] graph, boolean[] visited, int current, int start, int depth, int k) {
+        // dosli smo do trazene dubine, gledamo jesmo li se vratili u pocetak
+        if (depth == k) {
+            return current == start;
         }
 
-        return trace;
+        visited[current] = true;
+
+        for (int i = 0; i < graph.length; i++) {
+            // ako postoji brid trenutni<->i
+            if (graph[current][i] == 1) {
+                // posjeti i ako nije posjecen
+                if (!visited[i]) {
+                    // vrati ako postoji put trazene duljine od i natrag do pocetka
+                    if (dfs(graph, visited, i, i + 1, depth + 1, k)) {
+                        return true;
+                    }
+                // ako smo korak do zatvaranja ciklusa trazene duljine
+                } else if (i == start && depth + 1 == k) {
+                    return true;
+                }
+            }
+        }
+
+        visited[current] = false;
+        return false;
     }
 
     private static FileData processFile(String filePath) throws FileNotFoundException {
@@ -77,48 +100,5 @@ public class Lab2 {
         fileScanner.close();
 
         return new FileData(n, k, matrix);
-    }
-
-    private static int[][] mul(int[][] a, int[][] b) {
-        if (a[0].length != b.length) { throw new IllegalArgumentException("Matrice nisu ulančane."); }
-
-        int[][] result = new int[a.length][b[0].length];
-
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < b[0].length; j++) {
-                for (int k = 0; k < a[0].length; k++) {
-                    result[i][j] += a[i][k] * b[k][j];
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private static int[][] unitMatrix(int n) {
-        int[][] result = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            result[i][i] = 1;
-        }
-        return result;
-    }
-
-    private static int[][] pow(int[][] mat, int power) {
-        if (power < 0) { throw new IllegalArgumentException("Negativan eksponent."); }
-
-        if (mat.length != mat[0].length) { throw new IllegalArgumentException("Matrica nije kvadratna."); }
-
-        int[][] result = unitMatrix(mat.length);
-        int[][] base = mat;
-
-        while (power > 0) {
-            if (power % 2 == 1) {
-                result = mul(result, base);
-            }
-            base = mul(base, base);
-            power /= 2;
-        }
-
-        return result;
     }
 }
