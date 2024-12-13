@@ -42,7 +42,6 @@ public class Lab2 {
         in.close();
     }
 
-
     public static boolean hasKCycle(int[][] graph, int k) {
         boolean[] visited = new boolean[graph.length];
 
