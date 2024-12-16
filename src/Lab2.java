@@ -47,7 +47,6 @@ public class Lab2 {
 
         boolean[] visited = new boolean[graph.length];
 
-        // za svaki vrh provjeri je li dio ciklusa trazene duljine
         for (int i = 0; i < graph.length; i++) {
             if (dfs(graph, visited, i, i, 0, k)) {
                 return true;
