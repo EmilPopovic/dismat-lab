@@ -35,7 +35,7 @@ public class Lab2 {
             System.exit(1);
         }
 
-        System.out.println("Rjesenje: " + hasKCycle(matrix, k));
+        System.out.println("Rjesenje: " + (hasKCycle(matrix, k) ? 1 : 0));
 
         in.close();
     }
