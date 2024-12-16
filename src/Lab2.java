@@ -5,12 +5,10 @@ import java.util.Scanner;
 public class Lab2 {
 
     static class FileData {
-        int n;
         int k;
         int[][] matrix;
 
-        FileData(int n, int k, int[][] matrix) {
-            this.n = n;
+        FileData(int k, int[][] matrix) {
             this.k = k;
             this.matrix = matrix;
         }
@@ -43,6 +41,10 @@ public class Lab2 {
     }
 
     public static boolean hasKCycle(int[][] graph, int k) {
+        if (k < 3 || k > graph.length) {
+            return false;
+        }
+
         boolean[] visited = new boolean[graph.length];
 
         // za svaki vrh provjeri je li dio ciklusa trazene duljine
@@ -55,7 +57,6 @@ public class Lab2 {
     }
 
     private static boolean dfs(int[][] graph, boolean[] visited, int current, int start, int depth, int k) {
-        // dosli smo do trazene dubine, gledamo jesmo li se vratili u pocetak
         if (depth == k) {
             return current == start;
         }
@@ -63,18 +64,16 @@ public class Lab2 {
         visited[current] = true;
 
         for (int i = 0; i < graph.length; i++) {
-            // ako postoji brid trenutni<->i
-            if (graph[current][i] == 1) {
-                // posjeti i ako nije posjecen
-                if (!visited[i]) {
-                    // vrati ako postoji put trazene duljine od i natrag do pocetka
-                    if (dfs(graph, visited, i, i + 1, depth + 1, k)) {
-                        return true;
-                    }
-                // ako smo korak do zatvaranja ciklusa trazene duljine
-                } else if (i == start && depth + 1 == k) {
+            if (graph[current][i] == 0) {
+                continue;
+            }
+
+            if (!visited[i]) {
+                if (dfs(graph, visited, i, start, depth + 1, k)) {
                     return true;
                 }
+            } else if (i == start && depth + 1 == k) {
+                return true;
             }
         }
 
@@ -98,6 +97,6 @@ public class Lab2 {
 
         fileScanner.close();
 
-        return new FileData(n, k, matrix);
+        return new FileData(k, matrix);
     }
 }
